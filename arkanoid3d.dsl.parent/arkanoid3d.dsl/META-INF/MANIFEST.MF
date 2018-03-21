@@ -1,0 +1,29 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: arkanoid3d.dsl
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: arkanoid3d.dsl; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.eclipse.xtext,
+ org.eclipse.xtext.xbase,
+ org.eclipse.equinox.common;bundle-version="3.5.0",
+ org.eclipse.emf.ecore,
+ org.eclipse.xtext.xbase.lib,
+ org.eclipse.xtext.util,
+ org.eclipse.xtend.lib,
+ org.eclipse.emf.common,
+ org.antlr.runtime
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: de.jugh.services,
+ de.jugh.serializer,
+ de.jugh.generator,
+ de.jugh.arkanoidDsl.util,
+ de.jugh,
+ de.jugh.arkanoidDsl,
+ de.jugh.validation,
+ de.jugh.scoping,
+ de.jugh.arkanoidDsl.impl,
+ de.jugh.parser.antlr.internal,
+ de.jugh.parser.antlr
+Import-Package: org.apache.log4j

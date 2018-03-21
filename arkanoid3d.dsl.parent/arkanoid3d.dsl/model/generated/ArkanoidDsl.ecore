@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="arkanoidDsl" nsURI="http://www.jugh.de/ArkanoidDsl" nsPrefix="arkanoidDsl">
+  <eClassifiers xsi:type="ecore:EClass" name="GameContentProvider">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="game" eType="#//Game" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="level" upperBound="-1"
+        eType="#//Level" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="bricks" upperBound="-1"
+        eType="#//Brick" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Game">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="levels" unique="false"
+        upperBound="-1" eType="#//Level"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Level">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rows" upperBound="-1" eType="#//Row"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Row">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="bricks" upperBound="-1"
+        eType="#//BrickInRow" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BrickInRow">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="instance" eType="#//Brick"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Brick">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="color" eType="#//BRICK_COLOR"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="BRICK_COLOR">
+    <eLiterals name="BLUE" literal="BLUE"/>
+    <eLiterals name="YELLOW" value="1" literal="YELLOW"/>
+    <eLiterals name="RED" value="2" literal="RED"/>
+    <eLiterals name="GREEN" value="3" literal="GREEN"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BrickReference" eSuperTypes="#//BrickInRow">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="reference" eType="#//Brick"/>
+  </eClassifiers>
+</ecore:EPackage>
