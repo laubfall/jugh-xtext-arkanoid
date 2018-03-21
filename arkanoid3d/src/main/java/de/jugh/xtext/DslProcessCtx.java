@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.xtext.resource.XtextResourceSet;
+
 /**
  * Contains all the information required by the process that parses dsls to executable artifacts.
  * 
@@ -21,6 +23,8 @@ public class DslProcessCtx
    * Classloader that provides the classe required to compile the usm dsl fragments. Primarly used by {@link Compiler}.
    */
   private ClassLoader compileCL = getClass().getClassLoader();
+  
+  private XtextResourceSet resourceSet;
   
   public DslProcessCtx(final Set<Dsl> usmDsls)
   {
@@ -59,4 +63,14 @@ public class DslProcessCtx
   {
     this.compileCL = compileCL;
   }
+
+public XtextResourceSet getResourceSet()
+{
+	return resourceSet;
+}
+
+public void setResourceSet(XtextResourceSet resourceSet)
+{
+	this.resourceSet = resourceSet;
+}
 }

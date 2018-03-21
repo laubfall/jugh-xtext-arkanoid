@@ -36,10 +36,11 @@ public class Generator
   /**
    * Generates the java source.
    * 
-   * @param ast context that provides all the usm dsls.
+   * @param dslCts context that provides all the usm dsls.
+ * @return 
    * @throws IOException thrown when loading the usm dsl failed.
    */
-  public void generate(DslProcessCtx ast) throws IOException
+  public XtextResourceSet generate(DslProcessCtx dslCts) throws IOException
   {
     final XtextResourceSet resourceSet = XTextStandaloneService.getInstance().instance(XtextResourceSet.class);
 
@@ -52,9 +53,8 @@ public class Generator
     final Map<URI, Dsl> resUriToUsmDsl = new HashMap<>();
 
     // create the xtext resource, do the validation and cross reference resolution.
-    for (Dsl ud : ast.getDsls()) {
-      String key = NS_ECORE + ud.hashCode() + ".ark";
-      final URI uri = URI.createFileURI(key);
+    for (Dsl ud : dslCts.getDsls()) {
+      final URI uri = dslResFileUri(ud);
 
       // The uri is required to resolve Artifacts in the usm namespace of the dsl.
       final XtextResource xtextResource = XTextStandaloneService.getInstance().instance(XtextResource.class);
@@ -81,6 +81,13 @@ public class Generator
     fsa.getAllFiles().forEach((key, val) -> {
     });
 
+    dslCts.setResourceSet(resourceSet);
+    
+    return resourceSet;
+  }
+  
+  public static URI dslResFileUri(Dsl dsl) {
+	  return URI.createFileURI(NS_ECORE + dsl.getDslFileName() + ".ark");
   }
 
   class FSGeneratorPostProcessor implements IFilePostProcessor

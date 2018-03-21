@@ -1,5 +1,7 @@
 package de.jugh.xtext;
 
+import java.io.IOException;
+
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.log4j.Logger;
 import org.eclipse.xtext.parser.IParseResult;
@@ -84,19 +86,14 @@ public class XTextStandaloneService {
 			}
 		});
 
-//		sw.split();
-//		// GLog.note(CommonsLogCategory.UsmDsl, "Usm DSL parsing done in " +
-//		// sw.getSplitTime());
-//
-//		// after the parsing was successful its time to generate the source
-//		final Generator generator = new Generator();
-//		try {
-//			generator.generate(ctx);
-//		} catch (IOException e) {
-//			// GLog.error(CommonsLogCategory.UsmDsl, "Failed to generate usm artifacts", new
-//			// LogExceptionAttribute(e));
-//			throw new UsmDslProcessingException("Generating artifacts failed");
-//		}
+		// after the parsing was successful its time to generate the source
+		final Generator generator = new Generator();
+		try {
+			generator.generate(ctx);
+		} catch (IOException e) {
+			LOG.error("Unable to validate dsl and / or generate code", e);
+			return;
+		}
 //
 //		sw.split();
 //		// GLog.note(CommonsLogCategory.UsmDsl, "Usm DSL source generation done in " +

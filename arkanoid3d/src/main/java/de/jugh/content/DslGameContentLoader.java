@@ -3,20 +3,27 @@ package de.jugh.content;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.xtext.resource.XtextResourceSet;
 
 import de.jugh.GameProperties;
 import de.jugh.arkanoidDsl.BrickInRow;
 import de.jugh.arkanoidDsl.BrickReference;
 import de.jugh.arkanoidDsl.ContentDefinition;
+import de.jugh.arkanoidDsl.GameContentProvider;
 import de.jugh.arkanoidDsl.Level;
 import de.jugh.arkanoidDsl.Row;
 import de.jugh.xtext.Dsl;
 import de.jugh.xtext.DslProcessCtx;
+import de.jugh.xtext.Generator;
 import de.jugh.xtext.XTextStandaloneService;
 import de.jugh.xtext.XTextStandaloneServiceManager;
 import javafx.scene.paint.Color;
@@ -39,7 +46,10 @@ public class DslGameContentLoader extends GameContentLoader
 		final DslProcessCtx ctx = new DslProcessCtx(dsls);
 		xtextStandaloneService.reloadUsmDsl(ctx);
 
-		final ContentDefinition dslContent = gameFromDsl(dsls);
+//		ctx.getResourceSet().getResources().forEach(res -> res.getContents().forEach(System.out::println));
+
+//ctx.getResourceSet().getResource(uri, loadOnDemand)
+		final ContentDefinition dslContent = gameFromDsl(dsls, ctx.getResourceSet());
 		final Game g = new Game();
 		for (Level level : dslContent.getLevels()) {
 			de.jugh.content.Level rl = new de.jugh.content.Level();
@@ -49,13 +59,12 @@ public class DslGameContentLoader extends GameContentLoader
 				for (BrickInRow brickInRow : row.getBricks()) {
 					Brick brick = new Brick();
 					de.jugh.arkanoidDsl.Brick brickFromDef = getBrickFromDef(brickInRow);
-					
+
 					brick.color(Color.valueOf(brickFromDef.getColor().getName()));
 					rr.addBrick(brick);
 				}
 				rl.addRow(rr);
 			}
-
 			g.addLevel(rl);
 		}
 		return g;
@@ -63,7 +72,7 @@ public class DslGameContentLoader extends GameContentLoader
 
 	private de.jugh.arkanoidDsl.Brick getBrickFromDef(BrickInRow bir)
 	{
-		if(bir instanceof BrickReference) {
+		if (bir instanceof BrickReference) {
 			BrickReference br = (BrickReference) bir;
 			return br.getReference();
 		}
@@ -81,7 +90,7 @@ public class DslGameContentLoader extends GameContentLoader
 		final Set<Dsl> result = new HashSet<Dsl>();
 		for (String fileName : list) {
 			try {
-				String readLines = IOUtils.toString(new FileInputStream(new File(srcPath,fileName)), "UTF-8");
+				String readLines = IOUtils.toString(new FileInputStream(new File(srcPath, fileName)), "UTF-8");
 				Dsl dsl = new Dsl(readLines, fileName);
 				result.add(dsl);
 			} catch (IOException e) {
@@ -91,10 +100,14 @@ public class DslGameContentLoader extends GameContentLoader
 		return result;
 	}
 
-	private ContentDefinition gameFromDsl(Set<Dsl> dsls)
+	private ContentDefinition gameFromDsl(Set<Dsl> dsls, XtextResourceSet xtextResourceSet)
 	{
 		final Optional<Dsl> contetDefDsl = dsls.stream().filter(dsl -> (dsl.getGameContentProvider().getGame() != null))
 				.findFirst();
-		return contetDefDsl.get().getGameContentProvider().getGame();
+		
+		final URI dslResFileUri = Generator.dslResFileUri(contetDefDsl.get());
+		final Resource resource = xtextResourceSet.getResource(dslResFileUri, false);
+		GameContentProvider eObject = (GameContentProvider) resource.getContents().get(0);
+		return eObject.getGame();
 	}
 }
