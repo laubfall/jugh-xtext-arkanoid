@@ -17,8 +17,8 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ArkanoidDsl.ecore#//GameContentProvider/level"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ArkanoidDsl.ecore#//GameContentProvider/bricks"/>
     </genClasses>
-    <genClasses ecoreClass="ArkanoidDsl.ecore#//Game">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ArkanoidDsl.ecore#//Game/levels"/>
+    <genClasses ecoreClass="ArkanoidDsl.ecore#//ContentDefinition">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ArkanoidDsl.ecore#//ContentDefinition/levels"/>
     </genClasses>
     <genClasses ecoreClass="ArkanoidDsl.ecore#//Level">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ArkanoidDsl.ecore#//Level/name"/>

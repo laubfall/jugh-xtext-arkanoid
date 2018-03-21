@@ -84,7 +84,7 @@ public class Arkanoid extends Application
 		root.getChildren().add(gameCam);
 
 		buildGameContent();
-		
+
 		Scene scene = new Scene(root, GameProperties.get().getDoubleProperty("app.scene.width"),
 				GameProperties.get().getDoubleProperty("app.scene.height"), true);
 		scene.setFill(Color.BLACK);
@@ -98,14 +98,20 @@ public class Arkanoid extends Application
 		buildControls(scene);
 
 		buildGameTimer();
-//		buildBoundingBoxes();
+		// buildBoundingBoxes();
 	}
 
 	private void buildGameContent()
 	{
-		GameContentLoader gameContentLoader = new GameContentLoader();
-		gameContent = gameContentLoader.createGame();
-		world.getChildren().add(gameContent);
+		final String loaderFQN = GameProperties.get().getProperty("game.content.loader");
+		try {
+			GameContentLoader gameContentLoader;
+			gameContentLoader = (GameContentLoader) getClass().getClassLoader().loadClass(loaderFQN).newInstance();
+			gameContent = gameContentLoader.createGame();
+			world.getChildren().add(gameContent);
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+			throw new ArkGameException("Failed to load content loader", e);
+		}
 	}
 
 	private void buildGameTimer()
@@ -236,7 +242,7 @@ public class Arkanoid extends Application
 
 			keyHandling();
 
-//			movementAndCollisionHandling();
+			// movementAndCollisionHandling();
 		}
 
 		private void movementAndCollisionHandling()
@@ -294,9 +300,9 @@ public class Arkanoid extends Application
 				player.setTranslateX(player.getTranslateX() - 10);
 			} else if (KeyCode.SPACE.equals(currentPressedKey)) {
 				movements.get(bullet).forEach(move -> move.startMovement());
-			} else if(KeyCode.LEFT.equals(currentPressedKey)) {
+			} else if (KeyCode.LEFT.equals(currentPressedKey)) {
 				gameContent.previousLevel();
-			} else if(KeyCode.RIGHT.equals(currentPressedKey)) {
+			} else if (KeyCode.RIGHT.equals(currentPressedKey)) {
 				gameContent.nextLevel();
 			}
 

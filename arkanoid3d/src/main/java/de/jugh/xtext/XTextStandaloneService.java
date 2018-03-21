@@ -1,6 +1,7 @@
 package de.jugh.xtext;
 
 import org.apache.commons.lang3.time.StopWatch;
+import org.apache.log4j.Logger;
 import org.eclipse.xtext.parser.IParseResult;
 
 import com.google.inject.Injector;
@@ -27,6 +28,8 @@ public class XTextStandaloneService {
 	 */
 	private static XTextStandaloneService INSTANCE;
 
+	private static Logger LOG = Logger.getLogger(XTextStandaloneService.class);
+	
 	/**
 	 * DSL Setup class.
 	 */
@@ -75,15 +78,12 @@ public class XTextStandaloneService {
 
 			if (ast.hasSyntaxErrors()) {
 				ast.getSyntaxErrors().forEach(errorNode -> {
-					// GLog.error(CommonsLogCategory.UsmDsl,
-					// "USM Node in error: " + errorNode.getSyntaxErrorMessage().getMessage());
+					LOG.warn("dsl with validation errors: " + errorNode.getSyntaxErrorMessage().getMessage());
 				});
-				throw new DslProcessingException("Usm with validation errors");
+				throw new DslProcessingException("Dsl with validation errors");
 			}
 		});
 
-		// For solupharm demo purposes the code generation part is deactivated.
-		
 //		sw.split();
 //		// GLog.note(CommonsLogCategory.UsmDsl, "Usm DSL parsing done in " +
 //		// sw.getSplitTime());

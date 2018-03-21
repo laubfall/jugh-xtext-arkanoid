@@ -2,13 +2,14 @@
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="arkanoidDsl" nsURI="http://www.jugh.de/ArkanoidDsl" nsPrefix="arkanoidDsl">
   <eClassifiers xsi:type="ecore:EClass" name="GameContentProvider">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="game" eType="#//Game" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="game" eType="#//ContentDefinition"
+        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="level" upperBound="-1"
         eType="#//Level" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="bricks" upperBound="-1"
         eType="#//Brick" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Game">
+  <eClassifiers xsi:type="ecore:EClass" name="ContentDefinition">
     <eStructuralFeatures xsi:type="ecore:EReference" name="levels" unique="false"
         upperBound="-1" eType="#//Level"/>
   </eClassifiers>

@@ -5,6 +5,8 @@ import java.util.Set;
 
 import org.eclipse.xtext.parser.IParseResult;
 
+import de.jugh.arkanoidDsl.GameContentProvider;
+
 /**
  * An USM DSL Fragment and its generated artifacts (ast, source).
  * 
@@ -13,71 +15,79 @@ import org.eclipse.xtext.parser.IParseResult;
  */
 public class Dsl
 {
-  /**
-   * Raw USM DSL.
-   */
-  private final String dsl;
+	/**
+	 * Raw USM DSL.
+	 */
+	private final String dsl;
 
-  /**
-   * Name of the dsl source file.
-   */
-  private final String dslFileName;
-  
-  /**
-   * AST build upon the give usmDsl. Required to build the source.
-   */
-  private IParseResult ast;
+	/**
+	 * Name of the dsl source file.
+	 */
+	private final String dslFileName;
 
-  /**
-   * For every given usm dsl multiple sources can be generated.
-   */
-  private Set<GeneratedSource> sources = new HashSet<>();
-  
-  /**
-   * Constructor.
-   * @param usmDsl an usm dsl.
-   */
-  public Dsl(String usmDsl, String usmDslFileName)
-  {
-    super();
-    this.dsl = usmDsl;
-    this.dslFileName = usmDslFileName;
-  }
+	/**
+	 * AST build upon the give usmDsl. Required to build the source.
+	 */
+	private IParseResult ast;
 
-  
-  void addSource(GeneratedSource source) {
-    sources.add(source);
-  }
-  
-  public String getDslFileName() {
-	  return dslFileName;
-  }
-  
-  String getDsl()
-  {
-    return dsl;
-  }
+	/**
+	 * For every given usm dsl multiple sources can be generated.
+	 */
+	private Set<GeneratedSource> sources = new HashSet<>();
 
-  IParseResult getAst()
-  {
-    return ast;
-  }
+	/**
+	 * Constructor.
+	 * 
+	 * @param usmDsl an usm dsl.
+	 */
+	public Dsl(String usmDsl, String usmDslFileName) {
+		super();
+		this.dsl = usmDsl;
+		this.dslFileName = usmDslFileName;
+	}
 
-  Set<GeneratedSource> getGeneratedSource() {
-    return sources;
-  }
-  
-  /**
-   * Package protected, only used by the framework.
-   * @param ast the ast.
-   */
-  void setAst(IParseResult ast)
-  {
-    this.ast = ast;
-  }
-  
-//  public Page getPage() {
-//    return (Page) ast.getRootASTElement();
-//  }
+	void addSource(GeneratedSource source)
+	{
+		sources.add(source);
+	}
+
+	public String getDslFileName()
+	{
+		return dslFileName;
+	}
+
+	String getDsl()
+	{
+		return dsl;
+	}
+
+	IParseResult getAst()
+	{
+		return ast;
+	}
+
+	Set<GeneratedSource> getGeneratedSource()
+	{
+		return sources;
+	}
+
+	/**
+	 * Package protected, only used by the framework.
+	 * 
+	 * @param ast the ast.
+	 */
+	void setAst(IParseResult ast)
+	{
+		this.ast = ast;
+	}
+
+	public GameContentProvider getGameContentProvider()
+	{
+		return (GameContentProvider) ast.getRootASTElement();
+	}
+
+	// public Page getPage() {
+	// return (Page) ast.getRootASTElement();
+	// }
 
 }

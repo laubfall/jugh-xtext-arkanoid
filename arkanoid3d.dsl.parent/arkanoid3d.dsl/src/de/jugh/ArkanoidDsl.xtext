@@ -3,12 +3,12 @@ grammar de.jugh.ArkanoidDsl with org.eclipse.xtext.common.Terminals
 generate arkanoidDsl "http://www.jugh.de/ArkanoidDsl"
 
 GameContentProvider :
-	(game = Game) | (level += Level)* | (bricks += Brick)+
+	(game = ContentDefinition) | (level += Level)* | (bricks += Brick)+
 ;
 
-Game :
-	{Game}
-	'Game'
+ContentDefinition :
+	{ContentDefinition}
+	'Content'
 	levels += [Level]*
 ;
 
