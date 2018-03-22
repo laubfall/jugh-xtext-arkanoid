@@ -1,5 +1,9 @@
 package de.jugh.content;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import javafx.scene.Group;
 import javafx.scene.Node;
 
@@ -18,5 +22,12 @@ public class Row extends Group
 		brick.setTranslateX(horizontalOffset);
 
 		getChildren().add(brick);
+
+		// List<Node> copy = new ArrayList<Node>(getChildren().size());
+		// copy.addAll(getChildren());
+		// Collections.reverse(copy);
+		// getChildren().clear();
+		// getChildren().addAll(copy);
 	}
+
 }

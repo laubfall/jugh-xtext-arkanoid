@@ -85,9 +85,4 @@ public class Dsl
 	{
 		return (GameContentProvider) ast.getRootASTElement();
 	}
-
-	// public Page getPage() {
-	// return (Page) ast.getRootASTElement();
-	// }
-
 }

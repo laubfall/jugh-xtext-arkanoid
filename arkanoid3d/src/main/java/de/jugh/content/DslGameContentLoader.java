@@ -3,14 +3,16 @@ package de.jugh.content;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.resource.XtextResourceSet;
 
@@ -23,6 +25,7 @@ import de.jugh.arkanoidDsl.Level;
 import de.jugh.arkanoidDsl.Row;
 import de.jugh.xtext.Dsl;
 import de.jugh.xtext.DslProcessCtx;
+import de.jugh.xtext.DslProcessingException;
 import de.jugh.xtext.Generator;
 import de.jugh.xtext.XTextStandaloneService;
 import de.jugh.xtext.XTextStandaloneServiceManager;
@@ -36,6 +39,7 @@ import javafx.scene.paint.Color;
  */
 public class DslGameContentLoader extends GameContentLoader
 {
+	private static Logger LOG = Logger.getLogger(DslGameContentLoader.class);
 
 	@Override
 	public Game createGame()
@@ -44,29 +48,39 @@ public class DslGameContentLoader extends GameContentLoader
 				.getXtextStandaloneService();
 		final Set<Dsl> dsls = loadDsls();
 		final DslProcessCtx ctx = new DslProcessCtx(dsls);
-		xtextStandaloneService.reloadUsmDsl(ctx);
+		try {
+			xtextStandaloneService.reloadUsmDsl(ctx);
+		} catch (DslProcessingException d) {
+			LOG.error("Failed reloading dsl");
+			return null;
+		}
 
-//		ctx.getResourceSet().getResources().forEach(res -> res.getContents().forEach(System.out::println));
-
-//ctx.getResourceSet().getResource(uri, loadOnDemand)
 		final ContentDefinition dslContent = gameFromDsl(dsls, ctx.getResourceSet());
 		final Game g = new Game();
+		final List<de.jugh.content.Level> levels = new ArrayList<>();
+
 		for (Level level : dslContent.getLevels()) {
-			de.jugh.content.Level rl = new de.jugh.content.Level();
+			de.jugh.content.Level jfxLevel = new de.jugh.content.Level();
 
 			for (Row row : level.getRows()) {
-				de.jugh.content.Row rr = new de.jugh.content.Row();
-				for (BrickInRow brickInRow : row.getBricks()) {
-					Brick brick = new Brick();
+				de.jugh.content.Row jfxRow = new de.jugh.content.Row();
+				List<BrickInRow> bricks = new ArrayList<BrickInRow>(row.getBricks().size());
+				bricks.addAll(row.getBricks());
+				Collections.reverse(bricks);
+				for (BrickInRow brickInRow : bricks) {
+					Brick jfxBrick = new Brick();
 					de.jugh.arkanoidDsl.Brick brickFromDef = getBrickFromDef(brickInRow);
 
-					brick.color(Color.valueOf(brickFromDef.getColor().getName()));
-					rr.addBrick(brick);
+					jfxBrick.color(Color.valueOf(brickFromDef.getColor().getName()));
+					jfxRow.addBrick(jfxBrick);
 				}
-				rl.addRow(rr);
+				jfxLevel.addRow(jfxRow);
+				jfxRow.setTranslateX(-1*(jfxRow.getBoundsInLocal().getWidth() / 2));
 			}
-			g.addLevel(rl);
+			levels.add(jfxLevel);
 		}
+		levels.forEach(g::addLevel);
+
 		return g;
 	}
 
@@ -76,7 +90,9 @@ public class DslGameContentLoader extends GameContentLoader
 			BrickReference br = (BrickReference) bir;
 			return br.getReference();
 		}
+
 		return bir.getInstance();
+
 	}
 
 	private Set<Dsl> loadDsls()
@@ -104,7 +120,7 @@ public class DslGameContentLoader extends GameContentLoader
 	{
 		final Optional<Dsl> contetDefDsl = dsls.stream().filter(dsl -> (dsl.getGameContentProvider().getGame() != null))
 				.findFirst();
-		
+
 		final URI dslResFileUri = Generator.dslResFileUri(contetDefDsl.get());
 		final Resource resource = xtextResourceSet.getResource(dslResFileUri, false);
 		GameContentProvider eObject = (GameContentProvider) resource.getContents().get(0);

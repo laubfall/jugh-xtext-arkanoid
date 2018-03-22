@@ -10,6 +10,7 @@ import java.util.Optional;
 import org.apache.commons.lang.math.RandomUtils;
 import org.apache.commons.math3.geometry.euclidean.threed.Plane;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import org.apache.log4j.Logger;
 
 import de.jugh.content.Game;
 import de.jugh.content.GameContentLoader;
@@ -67,6 +68,8 @@ public class Arkanoid extends Application
 	//
 	private Map<Node, List<IMovement>> movements = new HashMap<>();
 
+	private static Logger LOG = Logger.getLogger(Arkanoid.class);
+	
 	public static void main(String[] arg)
 	{
 		launch(arg);
@@ -107,7 +110,14 @@ public class Arkanoid extends Application
 		try {
 			GameContentLoader gameContentLoader;
 			gameContentLoader = (GameContentLoader) getClass().getClassLoader().loadClass(loaderFQN).newInstance();
+			Game oldGameContent = gameContent;
+			if (gameContent != null) {
+				world.getChildren().remove(gameContent);
+			}
 			gameContent = gameContentLoader.createGame();
+			if(gameContent == null) {
+				gameContent = oldGameContent; // return to the previous state.
+			}
 			world.getChildren().add(gameContent);
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 			throw new ArkGameException("Failed to load content loader", e);
@@ -304,6 +314,9 @@ public class Arkanoid extends Application
 				gameContent.previousLevel();
 			} else if (KeyCode.RIGHT.equals(currentPressedKey)) {
 				gameContent.nextLevel();
+			} else if(KeyCode.R.equals(currentPressedKey)) {
+				LOG.info("Reloading game content");
+				buildGameContent();
 			}
 
 			currentPressedKey = null;
