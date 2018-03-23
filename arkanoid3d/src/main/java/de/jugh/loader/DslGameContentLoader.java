@@ -1,4 +1,4 @@
-package de.jugh.content;
+package de.jugh.loader;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,6 +23,8 @@ import de.jugh.arkanoidDsl.ContentDefinition;
 import de.jugh.arkanoidDsl.GameContentProvider;
 import de.jugh.arkanoidDsl.Level;
 import de.jugh.arkanoidDsl.Row;
+import de.jugh.content.Brick;
+import de.jugh.content.Game;
 import de.jugh.xtext.Dsl;
 import de.jugh.xtext.DslProcessCtx;
 import de.jugh.xtext.DslProcessingException;

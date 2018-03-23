@@ -1,9 +1,11 @@
-grammar de.jugh.ArkanoidDsl with org.eclipse.xtext.common.Terminals
+grammar de.jugh.ArkanoidDsl with org.eclipse.xtext.xbase.Xbase
 
 generate arkanoidDsl "http://www.jugh.de/ArkanoidDsl"
 
+import "http://www.eclipse.org/xtext/xbase/Xbase" as xbase
+
 GameContentProvider :
-	(game = ContentDefinition) | (level += Level)* | (bricks += Brick)+
+	((game = ContentDefinition) | (level += Level)* | (bricks += Brick)+) | rowCreators += RowCreator+
 ;
 
 ContentDefinition :
@@ -18,16 +20,25 @@ Level:
 	rows += Row*
 ;
 
+//@Override
+//XBlockExpression returns xbase::XExpression: 
+//	({RowCreator} =>
+RowCreator:
+	'RowCreator' name=ID creator=XBlockExpression
+;
+ 
+
 Row :
 	'Row' 
-		bricks += BrickInRow+
+		(bricks += BrickInRow+ |
+		'creator' rowCreatorRef = [RowCreator])
 ;
+
 
 BrickInRow:
 	instance = Brick |
 	{BrickReference} reference = [Brick]
 ;
-
 
 Brick :
 	'B' (name=ID)? EXPR_START color=BRICK_COLOR EXPR_END

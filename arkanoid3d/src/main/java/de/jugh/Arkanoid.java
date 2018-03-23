@@ -13,7 +13,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.apache.log4j.Logger;
 
 import de.jugh.content.Game;
-import de.jugh.content.GameContentLoader;
+import de.jugh.loader.GameContentLoader;
 import de.jugh.move.DetectedCollision;
 import de.jugh.move.IMovement;
 import de.jugh.move.MovementXZPlane;

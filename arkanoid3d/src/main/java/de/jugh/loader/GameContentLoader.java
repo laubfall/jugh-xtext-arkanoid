@@ -1,5 +1,9 @@
-package de.jugh.content;
+package de.jugh.loader;
 
+import de.jugh.content.Brick;
+import de.jugh.content.Game;
+import de.jugh.content.Level;
+import de.jugh.content.Row;
 import javafx.scene.paint.Color;
 
 /**

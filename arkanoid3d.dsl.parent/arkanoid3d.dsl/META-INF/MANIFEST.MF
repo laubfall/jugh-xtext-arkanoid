@@ -13,7 +13,9 @@ Require-Bundle: org.eclipse.xtext,
  org.eclipse.xtext.util,
  org.eclipse.xtend.lib,
  org.eclipse.emf.common,
- org.antlr.runtime
+ org.antlr.runtime,
+ org.eclipse.xtext.common.types,
+ org.objectweb.asm;bundle-version="[5.0.1,6.0.0)";resolution:=optional
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: de.jugh.services,
  de.jugh.serializer,
@@ -25,5 +27,6 @@ Export-Package: de.jugh.services,
  de.jugh.scoping,
  de.jugh.arkanoidDsl.impl,
  de.jugh.parser.antlr.internal,
- de.jugh.parser.antlr
+ de.jugh.parser.antlr,
+ de.jugh.jvmmodel
 Import-Package: org.apache.log4j

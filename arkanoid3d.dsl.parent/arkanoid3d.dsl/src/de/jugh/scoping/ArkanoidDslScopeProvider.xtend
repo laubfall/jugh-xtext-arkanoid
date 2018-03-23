@@ -3,6 +3,9 @@
  */
 package de.jugh.scoping
 
+import com.google.inject.Inject
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EReference
 
 /**
  * This class contains custom scoping description.
@@ -11,5 +14,10 @@ package de.jugh.scoping
  * on how and when to use it.
  */
 class ArkanoidDslScopeProvider extends AbstractArkanoidDslScopeProvider {
-
+	
+	
+	override getScope(EObject context, EReference reference) {		
+		val result = super.getScope(context, reference);
+		return result;
+	}
 }

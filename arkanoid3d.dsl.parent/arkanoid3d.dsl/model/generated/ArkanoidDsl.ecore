@@ -8,6 +8,8 @@
         eType="#//Level" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="bricks" upperBound="-1"
         eType="#//Brick" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rowCreators" upperBound="-1"
+        eType="#//RowCreator" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ContentDefinition">
     <eStructuralFeatures xsi:type="ecore:EReference" name="levels" unique="false"
@@ -18,9 +20,15 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="rows" upperBound="-1" eType="#//Row"
         containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RowCreator">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="creator" eType="ecore:EClass platform:/resource/org.eclipse.xtext.xbase/model/Xbase.ecore#//XExpression"
+        containment="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Row">
     <eStructuralFeatures xsi:type="ecore:EReference" name="bricks" upperBound="-1"
         eType="#//BrickInRow" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rowCreatorRef" eType="#//RowCreator"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BrickInRow">
     <eStructuralFeatures xsi:type="ecore:EReference" name="instance" eType="#//Brick"
