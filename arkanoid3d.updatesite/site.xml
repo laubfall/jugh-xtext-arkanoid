@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/arkanoid3d.dsl.feature_1.0.0.201803231518.jar" id="arkanoid3d.dsl.feature" version="1.0.0.201803231518"/>
+</site>

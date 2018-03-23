@@ -25,7 +25,7 @@ class DslClassLoader extends SecureClassLoader
     super(parent);
 
     ctx.getDsls().forEach(usms -> {
-      usms.getGeneratedSource().forEach(gs -> {
+      usms.getGeneratedSource().stream().filter(gs->gs.getDslClassFile() != null).forEach(gs -> {
         String name = gs.getDslClassFile().getName();
         name = StringUtils.stripStart(name, "/");
         name = StringUtils.substringBefore(name, ".java");

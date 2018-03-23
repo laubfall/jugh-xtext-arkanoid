@@ -84,7 +84,8 @@ public class DslXbaseGameContentLoader extends GameContentLoader
 	private void addBricksToRow(de.jugh.content.Row jfxRow, Row source)
 	{
 		if (source.getRowCreatorRef() != null) {
-			List<de.jugh.arkanoidDsl.Brick> bricksGenerated = bricksGenerated(source.getRowCreatorRef());
+			List<Brick> bricksGenerated = bricksGenerated(source.getRowCreatorRef());
+			bricksGenerated.forEach(jfxRow::addBrick);
 		} else {
 			List<BrickInRow> bricks = new ArrayList<BrickInRow>(source.getBricks().size());
 			bricks.addAll(source.getBricks());
@@ -98,7 +99,7 @@ public class DslXbaseGameContentLoader extends GameContentLoader
 		}
 	}
 
-	private List<de.jugh.arkanoidDsl.Brick> bricksGenerated(RowCreator creator)
+	private List<Brick> bricksGenerated(RowCreator creator)
 	{
 		return generateBricks(rowGenerator(), creator);
 	}
@@ -148,15 +149,21 @@ public class DslXbaseGameContentLoader extends GameContentLoader
 
 	private IRowGenerator rowGenerator()
 	{
-		return XTextStandaloneServiceManager.get().getXtextStandaloneService().instance(IRowGenerator.class);
+		Class<Object> loadUsmDslClass = XTextStandaloneServiceManager.get().getXtextStandaloneService().loadUsmDslClass("de.jugh.RowCreators");
+		try {
+			return (IRowGenerator) loadUsmDslClass.newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			LOG.error("unable to initiate dsl class", e);
+			throw new RuntimeException("dsl class loading failed");
+		}
 	}
 
-	private List<de.jugh.arkanoidDsl.Brick> generateBricks(IRowGenerator rowGenerator, RowCreator creator)
+	private List<Brick> generateBricks(IRowGenerator rowGenerator, RowCreator creator)
 	{
 		final String creatorName = creator.getName();
 		try {
 			Method creatorMethod = rowGenerator.getClass().getMethod(creatorName);
-			return (List<de.jugh.arkanoidDsl.Brick>) creatorMethod.invoke(rowGenerator);
+			return (List<Brick>) creatorMethod.invoke(rowGenerator);
 		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
 			LOG.error("failed to retrieve row create method", e);

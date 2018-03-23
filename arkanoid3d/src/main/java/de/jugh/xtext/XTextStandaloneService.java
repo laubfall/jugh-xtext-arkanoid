@@ -1,7 +1,10 @@
 package de.jugh.xtext;
 
+import java.io.File;
 import java.io.IOException;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.log4j.Logger;
 import org.eclipse.xtext.parser.IParseResult;
@@ -9,19 +12,20 @@ import org.eclipse.xtext.parser.IParseResult;
 import com.google.inject.Injector;
 
 import de.jugh.ArkanoidDslStandaloneSetup;
+import de.jugh.GameProperties;
 
 /**
  * 
- * Service that provides the whole xtext functionality required to create the
- * usm container and model classes out of an usm dsl.
+ * Service that provides the whole xtext functionality required to create the usm container and model classes out of an
+ * usm dsl.
  * 
  * @author Daniel (d.ludwig@micromata.de)
  *
  */
-public class XTextStandaloneService {
+public class XTextStandaloneService
+{
 	/**
-	 * Key for local-settings.properties. Value is the path to the folder that
-	 * stores the generated sources.
+	 * Key for local-settings.properties. Value is the path to the folder that stores the generated sources.
 	 */
 	private static final String USMDSL_DEV_SRC_PATH = "usmdsl.dev.src.path";
 
@@ -31,7 +35,7 @@ public class XTextStandaloneService {
 	private static XTextStandaloneService INSTANCE;
 
 	private static Logger LOG = Logger.getLogger(XTextStandaloneService.class);
-	
+
 	/**
 	 * DSL Setup class.
 	 */
@@ -54,7 +58,8 @@ public class XTextStandaloneService {
 		guiceInjector = usmStandaloneSetup.createInjectorAndDoEMFRegistration();
 	}
 
-	public static final XTextStandaloneService getInstance() {
+	public static final XTextStandaloneService getInstance()
+	{
 		if (INSTANCE != null) {
 			return INSTANCE;
 		}
@@ -66,10 +71,10 @@ public class XTextStandaloneService {
 	/**
 	 * Reloads every usm dsl resource, creates the java artifacts and compiles them.
 	 * 
-	 * @param ctx
-	 *            Process context.
+	 * @param ctx Process context.
 	 */
-	public void reloadUsmDsl(DslProcessCtx ctx) {
+	public void reloadUsmDsl(DslProcessCtx ctx)
+	{
 		StopWatch sw = new StopWatch();
 		sw.start();
 
@@ -94,34 +99,26 @@ public class XTextStandaloneService {
 			LOG.error("Unable to validate dsl and / or generate code", e);
 			return;
 		}
-//
-//		sw.split();
-//		// GLog.note(CommonsLogCategory.UsmDsl, "Usm DSL source generation done in " +
-//		// sw.getSplitTime());
-//
-//		// the generated sources are attached to the UsmDsl object instances. Now
-//		// compile them.
-//		final Compiler compiler = new Compiler();
-//		compiler.compile(ctx);
-//
-//		sw.split();
-//		// GLog.note(CommonsLogCategory.UsmDsl, "Usm DSL compile done in " +
-//		// sw.getSplitTime());
-//
-//		// persist the sources that were generated. Can be used for debugging purposes.
-//		storeSourceIfDevMode(ctx);
-//
-//		usmDslClassloader = new UsmDslClassLoader(getClass().getClassLoader(), ctx);
+
+		 // the generated sources are attached to the UsmDsl object instances. Now
+		 // compile them.
+		final Compiler compiler = new Compiler();
+		compiler.compile(ctx);
+
+		// // persist the sources that were generated. Can be used for debugging purposes.
+		storeSource(ctx);
+
+		usmDslClassloader = new DslClassLoader(getClass().getClassLoader(), ctx);
 	}
 
 	/**
 	 * Load an usm dsl class.
 	 * 
-	 * @param className
-	 *            class name to load (FQN)
+	 * @param className class name to load (FQN)
 	 * @return see description.
 	 */
-	public <T> Class<T> loadUsmDslClass(final String className) {
+	public <T> Class<T> loadUsmDslClass(final String className)
+	{
 		try {
 			return (Class<T>) usmDslClassloader.loadClass(className);
 		} catch (ClassNotFoundException e) {
@@ -132,49 +129,38 @@ public class XTextStandaloneService {
 		}
 	}
 
-	private void storeSourceIfDevMode(DslProcessCtx ctx) {
-		// if (StaticDaoManager.get().isDEV() == false) {
-		// return;
-		// }
+	private void storeSource(DslProcessCtx ctx)
+	{
+		String genPath = GameProperties.get().getProperty("game.dsl.genpath");
+		if (StringUtils.isBlank(genPath)) {
+			return;
+		}
 
-		// if (LocalSettings.get().containsKey(USMDSL_DEV_SRC_PATH) == false) {
-		// GLog.note(CommonsLogCategory.UsmDsl,
-		// "No usm src path defined, no sources are produced. Use key: " +
-		// USMDSL_DEV_SRC_PATH);
-		// return;
-		// }
-
-		// final String srcPath = LocalSettings.get().get(USMDSL_DEV_SRC_PATH);
-		//
-		// ctx.getUsmDsls().forEach(usms -> {
-		// usms.getGeneratedSource().forEach(gs -> {
-		// try {
-		// FileUtils.write(new File(srcPath, gs.getSourceName()), gs.getSource());
-		// GLog.note(CommonsLogCategory.UsmDsl, "Wrote usm source for dev mode: " +
-		// gs.getSourceName());
-		// } catch (IOException e) {
-		// GLog.error(CommonsLogCategory.UsmDsl, "Error while writing usm source for dev
-		// mode",
-		// new LogExceptionAttribute(e));
-		// }
-		// });
-		// });
+		ctx.getDsls().forEach(usms -> {
+			usms.getGeneratedSource().forEach(gs -> {
+				try {
+					FileUtils.write(new File(genPath, gs.getSourceName()), gs.getSource(), "UTF-8");
+				} catch (IOException e) {
+					LOG.error("failed to write generated sources", e);
+				}
+			});
+		});
 	}
 
-	private static synchronized void init() {
+	private static synchronized void init()
+	{
 		INSTANCE = new XTextStandaloneService();
 	}
 
 	/**
 	 * Factory method that produce instances of classes that the guice di knows.
 	 * 
-	 * @param clazz
-	 *            class to initiate.
+	 * @param clazz class to initiate.
 	 * @return see description.
 	 */
-	public <T> T instance(Class<T> clazz) {
+	public <T> T instance(Class<T> clazz)
+	{
 		return guiceInjector.getInstance(clazz);
 	}
 
-	
 }

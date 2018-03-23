@@ -1,0 +1,19 @@
+RowCreator createSomeBricks {
+	val brick = new de.jugh.content.Brick()
+	val result = new java.util.ArrayList();
+	
+	// unable to find the jfx color. why???
+//	brick.color(Color)
+	
+	result.add(new de.jugh.content.Brick())
+	result.add(new de.jugh.content.Brick())
+	result.add(new de.jugh.content.Brick())
+	result.add(new de.jugh.content.Brick())
+	result.add(new de.jugh.content.Brick())
+	result.add(brick)
+	return result;
+}
+
+RowCreator createMoreBricks {
+	
+}

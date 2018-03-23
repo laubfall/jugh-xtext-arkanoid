@@ -73,7 +73,7 @@ class ArkanoidDslJvmModelInferrer extends AbstractModelInferrer {
 			creator.forEach [
 				val rowCreatorDef = it as RowCreator;
 
-				val method = element.toMethod(rowCreatorDef.name, typeRef(List, typeRef(Brick))) [
+				val method = element.toMethod(rowCreatorDef.name, typeRef(List, typeRef("de.jugh.content.Brick"))) [
 					body = rowCreatorDef.creator
 				]
 
