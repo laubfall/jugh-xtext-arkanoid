@@ -2,9 +2,10 @@ RowCreator createSomeBricks {
 	val brick = new de.jugh.content.Brick()
 	val result = new java.util.ArrayList();
 	
-	// unable to find the jfx color. why???
-//	brick.color(Color)
-	
+	val b = new de.jugh.content.Brick();
+	b.color(javafx.scene.paint.Color.^BLUE);
+	result.add(b)
+	result.add(new de.jugh.content.Brick())
 	result.add(new de.jugh.content.Brick())
 	result.add(new de.jugh.content.Brick())
 	result.add(new de.jugh.content.Brick())

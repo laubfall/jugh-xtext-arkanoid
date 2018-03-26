@@ -37,19 +37,19 @@ class Compiler
 		final DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
 		final StandardJavaFileManager fm = compiler.getStandardFileManager(diagnostics, null, Charset.forName("UTF-8"));
 
+		final DslCompilerFileManager dslCompilerFileManager = new DslCompilerFileManager(fm);
 		final List<DslGeneratedJavaFileObject> compilationUnits = new ArrayList<>();
 
 		// add the sources to compile
 		for (Dsl usmDsl : ctx.getDsls()) {
 			for (GeneratedSource generatedSource : usmDsl.getGeneratedSource()) {
 				final DslGeneratedJavaFileObject dslGeneratedJavaFileObject = new DslGeneratedJavaFileObject(generatedSource);
-//				generatedSource.setDslClassFile(dslGeneratedJavaFileObject);
 				compilationUnits.add(dslGeneratedJavaFileObject);
 			}
 		}
 
 		final StringWriter sw = new StringWriter();
-		final CompilationTask task = compiler.getTask(sw, fm, diagnostics, null, null, compilationUnits);
+		final CompilationTask task = compiler.getTask(sw, dslCompilerFileManager, diagnostics, null, null, compilationUnits);
 		Boolean call = task.call();
 		
 		if (Boolean.FALSE.equals(call)) {
