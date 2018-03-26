@@ -10,6 +10,7 @@ RowCreator createSomeBricks {
 	result.add(new de.jugh.content.Brick())
 	result.add(new de.jugh.content.Brick())
 	result.add(new de.jugh.content.Brick())
+	result.add(new de.jugh.content.Brick())
 	result.add(brick)
 	return result;
 }

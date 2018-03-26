@@ -105,7 +105,7 @@ public class XTextStandaloneService
 		final Compiler compiler = new Compiler();
 		compiler.compile(ctx);
 
-		// // persist the sources that were generated. Can be used for debugging purposes.
+		// persist the sources that were generated. Can be used for debugging purposes.
 		storeSource(ctx);
 
 		usmDslClassloader = new DslClassLoader(getClass().getClassLoader(), ctx);

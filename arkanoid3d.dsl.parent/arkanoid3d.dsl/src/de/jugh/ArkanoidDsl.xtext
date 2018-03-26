@@ -20,9 +20,6 @@ Level:
 	rows += Row*
 ;
 
-//@Override
-//XBlockExpression returns xbase::XExpression: 
-//	({RowCreator} =>
 RowCreator:
 	'RowCreator' name=ID creator=XBlockExpression
 ;

@@ -30,8 +30,9 @@ class DslClassLoader extends SecureClassLoader
         name = StringUtils.stripStart(name, "/");
         name = StringUtils.substringBefore(name, ".java");
         name = StringUtils.replace(name, "/", ".");
-        defineClass(name,
+        Class<?> defineClass = defineClass(name,
             gs.getDslClassFile().byteCode(), 0, gs.getDslClassFile().byteCode().length);
+        resolveClass(defineClass);
       });
     });
   }

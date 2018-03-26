@@ -13,6 +13,8 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
+import org.apache.log4j.Logger;
+
 /**
  * Compiles the generated artifacts.
  * 
@@ -21,45 +23,46 @@ import javax.tools.ToolProvider;
  */
 class Compiler
 {
-  /**
-   * Compile every source that is attached to an {@link Dsl} instance.
-   * 
-   * @param ctx processing context. Mandatory.
-   */
-  public final void compile(DslProcessCtx ctx)
-  {
+	private static Logger LOG = Logger.getLogger(Compiler.class);
+	
+	/**
+	 * Compile every source that is attached to an {@link Dsl} instance.
+	 * 
+	 * @param ctx processing context. Mandatory.
+	 */
+	public final void compile(DslProcessCtx ctx)
+	{
 
-    final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-    final DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
-    final StandardJavaFileManager fm = compiler.getStandardFileManager(diagnostics, null, Charset.forName("UTF-8"));
+		final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+		final DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
+		final StandardJavaFileManager fm = compiler.getStandardFileManager(diagnostics, null, Charset.forName("UTF-8"));
 
-    // TODO it is probably a good approach to create this filemanager once. Creating seems to be expensive.
-//    final GenomeBCLJavaFileManager genomeBCLJavaFileManager = new GenomeBCLJavaFileManager(ctx.getCompileCL(), fm);
-    final List<DslGeneratedJavaFileObject> compilationUnits = new ArrayList<>();
+		final List<DslGeneratedJavaFileObject> compilationUnits = new ArrayList<>();
 
-    // add the sources to compile
-    for (Dsl usmDsl : ctx.getDsls()) {
-      for (GeneratedSource generatedSource : usmDsl.getGeneratedSource()) {
-        compilationUnits.add(new DslGeneratedJavaFileObject(generatedSource));
-      }
-    }
+		// add the sources to compile
+		for (Dsl usmDsl : ctx.getDsls()) {
+			for (GeneratedSource generatedSource : usmDsl.getGeneratedSource()) {
+				final DslGeneratedJavaFileObject dslGeneratedJavaFileObject = new DslGeneratedJavaFileObject(generatedSource);
+//				generatedSource.setDslClassFile(dslGeneratedJavaFileObject);
+				compilationUnits.add(dslGeneratedJavaFileObject);
+			}
+		}
 
-    final StringWriter sw = new StringWriter(); // TODO check if this writer is necessary.
-    final CompilationTask task = compiler.getTask(sw, fm, diagnostics, null, null,
-        compilationUnits);
-    Boolean call = task.call();
-    if (Boolean.FALSE.equals(call)) {
+		final StringWriter sw = new StringWriter();
+		final CompilationTask task = compiler.getTask(sw, fm, diagnostics, null, null, compilationUnits);
+		Boolean call = task.call();
+		
+		if (Boolean.FALSE.equals(call)) {
+			StringWriter diagnosticWriter = new StringWriter();
+			for (Diagnostic<? extends JavaFileObject> diagnostic : diagnostics.getDiagnostics()) {
+				diagnosticWriter.append(diagnostic.toString()).append("\n");
+			}
 
-      StringWriter diagnosticWriter = new StringWriter();
-      for (Diagnostic<? extends JavaFileObject> diagnostic : diagnostics.getDiagnostics()) {
-        diagnosticWriter.append(diagnostic.toString()).append("\n");
-      }
+			LOG.error("Failed to compile dsl generated java code: " + diagnosticWriter.getBuffer().toString());
+			
+			throw new DslProcessingException("Error during usm dsl compilation phase");
+		}
 
-//      GLog.error(CommonsLogCategory.UsmDsl, "Failed to compile usm dsl",
-//          new LogAttribute(GenomeAttributeType.Miscellaneous, diagnosticWriter.getBuffer().toString()));
-      throw new DslProcessingException("Error during usm dsl compilation phase");
-    }
-    
-//    GLog.note(CommonsLogCategory.UsmDsl, "Finished usm dsl artifact creation");
-  }
+		LOG.info("Finished compiling dsl generated java code");
+	}
 }
