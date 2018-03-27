@@ -63,22 +63,22 @@ class ArkanoidDslJvmModelInferrer extends AbstractModelInferrer {
 			return;
 		}
 
-		val creator = element.rowCreators;
-		if (creator === null || creator.empty) {
-			return;
-		}
-
-		acceptor.accept(element.toClass("de.jugh.RowCreators")) [clazz |
-			clazz.superTypes += typeRef(IRowGenerator)
-			creator.forEach [
-				val rowCreatorDef = it as RowCreator;
-
-				val method = element.toMethod(rowCreatorDef.name, typeRef(List, typeRef("de.jugh.content.Brick"))) [
-					body = rowCreatorDef.creator
-				]
-
-				clazz.members+=method;
-			]
-		]
+//		val creator = element.rowCreators;
+//		if (creator === null || creator.empty) {
+//			return;
+//		}
+//
+//		acceptor.accept(element.toClass("de.jugh.RowCreators")) [clazz |
+//			clazz.superTypes += typeRef(IRowGenerator)
+//			creator.forEach [
+//				val rowCreatorDef = it as RowCreator;
+//
+//				val method = element.toMethod(rowCreatorDef.name, typeRef(List, typeRef("de.jugh.content.Brick"))) [
+//					body = rowCreatorDef.creator
+//				]
+//
+//				clazz.members+=method;
+//			]
+//		]
 	}
 }

@@ -3,7 +3,6 @@
  */
 package de.jugh.validation
 
-
 /**
  * This class contains custom validation rules. 
  *

@@ -8,6 +8,7 @@ GameContentProvider :
 	((game = ContentDefinition) | (level += Level)* | (bricks += Brick)+) | rowCreators += RowCreator+
 ;
 
+
 ContentDefinition :
 	{ContentDefinition}
 	'Content'
