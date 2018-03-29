@@ -25,7 +25,15 @@ class ArkanoidDslParsingTest {
 	@Test
 	def void loadModel() {
 		val result = parseHelper.parse('''
+			import java.awt.Color;
+			;
 			
+			B {
+			fs
+				val x = java.awt.Color.RED;
+				fsdf
+				val i = 0+1;
+			}
 		''')
 		
 		result.assertNoErrors

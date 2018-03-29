@@ -25,6 +25,11 @@ import de.jugh.GameProperties;
 public class XTextStandaloneService
 {
 	/**
+	 * Key for local-settings.properties. Value is the path to the folder that stores the generated sources.
+	 */
+	private static final String USMDSL_DEV_SRC_PATH = "usmdsl.dev.src.path";
+
+	/**
 	 * Singleton instance.
 	 */
 	private static XTextStandaloneService INSTANCE;
@@ -34,7 +39,7 @@ public class XTextStandaloneService
 	/**
 	 * DSL Setup class.
 	 */
-	private ArkanoidDslStandaloneSetup dslStandaloneSetup = new ArkanoidDslStandaloneSetup();
+	private ArkanoidDslStandaloneSetup usmStandaloneSetup = new ArkanoidDslStandaloneSetup();
 
 	/**
 	 * Guice DI.
@@ -44,13 +49,13 @@ public class XTextStandaloneService
 	/**
 	 * The classloader with the acutal usm dsl classes.
 	 */
-	private DslClassLoader dslClassloader;
+	private DslClassLoader usmDslClassloader;
 
 	/**
 	 * Only accessible by the service manager or childs.
 	 */
 	protected XTextStandaloneService() {
-		guiceInjector = dslStandaloneSetup.createInjectorAndDoEMFRegistration();
+		guiceInjector = usmStandaloneSetup.createInjectorAndDoEMFRegistration();
 	}
 
 	public static final XTextStandaloneService getInstance()
@@ -103,7 +108,7 @@ public class XTextStandaloneService
 		// persist the sources that were generated. Can be used for debugging purposes.
 		storeSource(ctx);
 
-		dslClassloader = new DslClassLoader(getClass().getClassLoader(), ctx);
+		usmDslClassloader = new DslClassLoader(getClass().getClassLoader(), ctx);
 	}
 
 	/**
@@ -115,7 +120,7 @@ public class XTextStandaloneService
 	public <T> Class<T> loadUsmDslClass(final String className)
 	{
 		try {
-			return (Class<T>) dslClassloader.loadClass(className);
+			return (Class<T>) usmDslClassloader.loadClass(className);
 		} catch (ClassNotFoundException e) {
 			// throw new LoggedRuntimeException(LogLevel.Error, CommonsLogCategory.UsmDsl,
 			// "Not able to load usm dsl class",
