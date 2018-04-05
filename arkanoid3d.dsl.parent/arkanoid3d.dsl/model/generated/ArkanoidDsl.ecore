@@ -2,18 +2,25 @@
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="arkanoidDsl" nsURI="http://www.jugh.de/ArkanoidDsl" nsPrefix="arkanoidDsl">
   <eClassifiers xsi:type="ecore:EClass" name="GameContentProvider">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cardinality" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="game" eType="#//ContentDefinition"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="level" upperBound="-1"
+        eType="#//Level" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="bricks" upperBound="-1"
+        eType="#//Brick" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rowCreators" upperBound="-1"
+        eType="#//RowCreator" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ContentDefinition" eSuperTypes="#//GameContentProvider">
+  <eClassifiers xsi:type="ecore:EClass" name="ContentDefinition">
     <eStructuralFeatures xsi:type="ecore:EReference" name="levels" unique="false"
         upperBound="-1" eType="#//Level"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Level" eSuperTypes="#//GameContentProvider">
+  <eClassifiers xsi:type="ecore:EClass" name="Level">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rows" upperBound="-1" eType="#//Row"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="RowCreator" eSuperTypes="#//GameContentProvider">
+  <eClassifiers xsi:type="ecore:EClass" name="RowCreator">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="creator" eType="ecore:EClass platform:/resource/org.eclipse.xtext.xbase/model/Xbase.ecore#//XExpression"
         containment="true"/>
@@ -27,7 +34,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="instance" eType="#//Brick"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Brick" eSuperTypes="#//GameContentProvider">
+  <eClassifiers xsi:type="ecore:EClass" name="Brick">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="color" eType="#//BRICK_COLOR"/>
   </eClassifiers>

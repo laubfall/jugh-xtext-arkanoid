@@ -1,4 +1,3 @@
 Level level1
 	Row B{RED}
 	Row creator createSomeBricks
-	Row creator createSomeBricks

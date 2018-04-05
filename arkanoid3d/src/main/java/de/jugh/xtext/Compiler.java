@@ -49,7 +49,9 @@ class Compiler
 		}
 
 		final StringWriter sw = new StringWriter();
-		final CompilationTask task = compiler.getTask(sw, dslCompilerFileManager, diagnostics, null, null, compilationUnits);
+		ArrayList<String> options = new ArrayList<>();
+		options.add("-g");
+		final CompilationTask task = compiler.getTask(sw, dslCompilerFileManager, diagnostics, options, null, compilationUnits);
 		Boolean call = task.call();
 		
 		if (Boolean.FALSE.equals(call)) {
