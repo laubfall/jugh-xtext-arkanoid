@@ -1,0 +1,1 @@
+Generated Source by xtext goes here! If this folder is not recognized by eclipse as a source folder you have to add it. Go to the Build Path Context Menu there you find an Entry "add as source folder".

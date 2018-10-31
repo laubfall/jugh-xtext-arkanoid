@@ -3,7 +3,6 @@
 **/src-gen/**
 **/.antlr-generator-3.2.0-patch.jar
 **/.launch/**
-**/src-xtext/**
 arkanoid3d.updatesite/features/*.jar
 arkanoid3d.updatesite/plugins/*.jar
 
